@@ -11,11 +11,14 @@ public class app extends Applet implements Runnable, KeyListener{
 	Graphics Gr;
 	Graphics Gw;
 	int klawisz=0;
+	//char klawiszC;
+	String slowo;
 	int x=0;
 	int y=0;
 	int pozX;
 	int pozY;
 	plansza pl;
+	gracz gracz;
 	
 	
 	public void init(){
@@ -27,6 +30,7 @@ public class app extends Applet implements Runnable, KeyListener{
 		pozX = 300;
 		pozY = 300;
 		pl = new plansza(Constants.szerokoscOkna, Constants.wysokoscOkna);
+		gracz = new gracz(pl, pozX, pozY);
 	}
 	
 	public void start(){
@@ -41,18 +45,17 @@ public class app extends Applet implements Runnable, KeyListener{
 	
 	public void run(){
 		while(pracuje){
-			x=0;
-			y=0;
-			if(klawisz==37)	x = -1;
-			if(klawisz==38)	y = -1;
-			if(klawisz==39) x = 1;
-			if(klawisz==40) y = 1;
-			pl.ustawPole(pozX+=x, pozY+=y, 1);
+			
+			if(klawisz==37)	gracz.wLewo();
+			if(klawisz==38)	gracz.wGore();
+			if(klawisz==39) gracz.wPrawo();
+			if(klawisz==40) gracz.wDol();
+			if(klawisz==10) gracz.skrecLosowo();
+			pl.ustawPole(gracz.pozX, gracz.pozY, 1);
+			gracz.ruch();
+			
 			draw();
 
-
-			
-			
 			try{
 				Thread.sleep(1000/Constants.FPS);
 			}
@@ -65,27 +68,33 @@ public class app extends Applet implements Runnable, KeyListener{
 	public void draw(){
 		Gr.clearRect(0, 0, getWidth(), getHeight());
 		int zajete[] = new int[2];
+		
 		for(int i=0; i<pl.zajete.size(); i++){
 			zajete = pl.podajWsp(pl.zajete.get(i));
 			Gr.fillRect(zajete[0], zajete[1], 1, 1);
 		}
 		
-		Gr.drawString(Integer.toString(zajete[1]), 100, 100);
-		Gr.drawString(Integer.toString(pl.podajPole(40,40)), 100, 140);
-	}
-	
-	/*
-	public void generujPlansze(int szerokosc, int dlugosc){
-		for(int y=0; y<dlugosc; y++){
-			for(int x=0; x<szerokosc; x++){
-				pola.add(new pole(x, y, )
+		/*
+		for(int i=0; i<pl.pola.size(); i++){
+			if(pl.pola.get(i)==1){
+				zajete = pl.podajWsp(pl.pola.get(i));
+				Gr.fillRect(zajete[0], zajete[1], 1, 1);
 			}
+		}
+		*/
+		Gr.drawString(Integer.toString(pl.zajete.size()), 100, 40);
+		Gr.drawString(Integer.toString(zajete[1]), 100, 100);
+		Gr.drawString(Integer.toString(gracz.pozX)+" , "+Integer.toString(gracz.pozY), 100, 140);
+		Gr.drawString(Integer.toString(pl.podajKlucz(gracz.pozX, gracz.pozY)), 100, 180);
+		
+
 	}
-	*/
+
 	
 	
 	public void keyPressed(KeyEvent evt){
-		klawisz=evt.getKeyCode();
+		klawisz = evt.getKeyCode();
+		
 	}
 	
 	public void keyTyped(KeyEvent evt){
@@ -97,7 +106,7 @@ public class app extends Applet implements Runnable, KeyListener{
 	}
 	
 	public void keyReleased(KeyEvent evt){
-		
+
 	}
 
 }
