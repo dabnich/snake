@@ -10,7 +10,8 @@ public class app extends Applet implements Runnable, KeyListener{
 	boolean pracuje;
 	Graphics Gr;
 	Graphics Gw;
-	int klawisz=0;
+	int klawiszP=0;
+	int klawiszT=0;
 	//char klawiszC;
 	String slowo;
 	int x=0;
@@ -45,13 +46,16 @@ public class app extends Applet implements Runnable, KeyListener{
 	
 	public void run(){
 		while(pracuje){
-			
-			if(klawisz==37)	gracz.wLewo();
-			if(klawisz==38)	gracz.wGore();
-			if(klawisz==39) gracz.wPrawo();
-			if(klawisz==40) gracz.wDol();
-			if(klawisz==10) gracz.skrecLosowo();
 			pl.ustawPole(gracz.pozX, gracz.pozY, 1);
+			if(klawiszP==37)	gracz.wLewo();
+			if(klawiszP==38)	gracz.wGore();
+			if(klawiszP==39) 	gracz.wPrawo();
+			if(klawiszP==40) 	gracz.wDol();
+			if(klawiszP==10) {
+				gracz.jedzLosowo();
+				//klawiszT=0;
+			}
+			
 			gracz.ruch();
 			
 			draw();
@@ -93,7 +97,7 @@ public class app extends Applet implements Runnable, KeyListener{
 	
 	
 	public void keyPressed(KeyEvent evt){
-		klawisz = evt.getKeyCode();
+		klawiszP = evt.getKeyCode();
 		
 	}
 	
@@ -103,10 +107,12 @@ public class app extends Applet implements Runnable, KeyListener{
 		//38 - gora
 		//39 - prawo
 		//40 - dol
+		
+		
 	}
 	
 	public void keyReleased(KeyEvent evt){
-
+		klawiszT = evt.getKeyCode();
 	}
 
 }
